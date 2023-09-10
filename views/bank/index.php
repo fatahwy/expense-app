@@ -3,10 +3,8 @@
 use app\components\ButtonActionColumn;
 use app\components\Helper;
 use app\models\Bank;
-use kartik\icons\Icon;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
@@ -29,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'name',
+            'show_label:boolean',
             [
                 'attribute' => 'total',
                 'format' => 'integer',

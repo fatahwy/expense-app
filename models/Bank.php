@@ -39,7 +39,7 @@ class Bank extends BaseModel
     {
         return [
             [['client_id', 'name'], 'required'],
-            [['client_id', 'delete_time'], 'integer'],
+            [['client_id', 'delete_time', 'show_label'], 'integer'],
             [['total'], 'number'],
             [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 255],
@@ -57,6 +57,7 @@ class Bank extends BaseModel
             'client_id' => 'Client ID',
             'name' => 'Name',
             'total' => 'Total',
+            'show_label' => 'Show Label Transaction',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'delete_time' => 'Delete Time',

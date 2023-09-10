@@ -14,12 +14,25 @@ use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
 
+$linkIcon = 'https://cdn-icons-png.flaticon.com/512/4604/4604286.png';
+
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
-$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
+$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1']);
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+
+$this->registerMetaTag(['rel' => 'shortcut icon', 'type' => 'image/png', 'href' => $linkIcon]);
+// android
+$this->registerMetaTag(['name' => 'application-name', 'content' => Yii::$app->name]);
+$this->registerMetaTag(['name' => 'mobile-web-app-capable', 'content' => 'yes']);
+$this->registerMetaTag(['name' => 'theme-color', 'content' => '#fff']);
+// apple
+$this->registerMetaTag(['name' => 'apple-mobile-web-app-capable', 'content' => 'yes']);
+$this->registerMetaTag(['name' => 'apple-mobile-web-app-title', 'content' => Yii::$app->name]);
+$this->registerMetaTag(['name' => 'apple-mobile-web-app-status-bar-style', 'content' => 'black-translucent']);
+$this->registerLinkTag(['rel' => 'apple-touch-icon', 'href' => $linkIcon]);
 
 Icon::map($this);
 $isGuest = Yii::$app->user->isGuest;

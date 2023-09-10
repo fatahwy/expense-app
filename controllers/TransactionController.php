@@ -46,13 +46,14 @@ class TransactionController extends BaseController
 
         $mainQuery = clone $query;
 
-        $modelTotal = $query->select(['transaction.label_id', new Expression('sum(amount) amount')])
-            ->groupBy(['transaction.label_id'])
-            ->all();
-
         $total = [];
-        foreach ($modelTotal as $m) {
-            $total[$m->label->name] = $m->amount;
+        if ($user->defaultAccount->show_label ?? false) {
+            $modelTotal = $query->select(['transaction.label_id', new Expression('sum(amount) amount')])
+                ->groupBy(['transaction.label_id'])
+                ->all();
+            foreach ($modelTotal as $m) {
+                $total[$m->label->name] = $m->amount;
+            }
         }
 
         if ($user->bank_active) {
@@ -134,7 +135,7 @@ class TransactionController extends BaseController
 
                         $model->label_id = $modelLabel->label_id;
                     } else {
-                        $model->label_id = $categoryIds[$m->name];
+                        $model->label_id = $categoryIds[$model->category];
                     }
                 }
 

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /** @var app\models\Bank $model */
 
 $this->title = 'Update Bank: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Banks', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'bank_id' => $model->bank_id]];
+$this->params['breadcrumbs'][] = ['label' => 'Account', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->name];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="bank-update">
