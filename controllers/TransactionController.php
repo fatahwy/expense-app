@@ -168,27 +168,29 @@ class TransactionController extends BaseController
         ]);
     }
 
-    /**
-     * Deletes an existing Transaction model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $transaction_id Transaction ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($transaction_id)
     {
-        $this->findModel($transaction_id)->delete();
+        $user = $this->user;
+        $account = $user->defaultAccount;
+        $model = $this->findModel($transaction_id);
 
-        return $this->redirect(['index']);
+        $account->total -= $model->amount;
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            if ($account->save()) {
+                $model->delete();
+                $transaction->commit();
+            }
+        } catch (\Throwable $th) {
+            echo '<pre>';
+            print_r($th);
+            die;
+        }
+
+        return $this->redirect($this->request->referrer ?: $this->homeUrl);
     }
 
-    /**
-     * Finds the Transaction model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $transaction_id Transaction ID
-     * @return Transaction the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($transaction_id)
     {
         if (($model = Transaction::findOne(['transaction_id' => $transaction_id])) !== null) {

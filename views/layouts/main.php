@@ -8,6 +8,7 @@ use app\widgets\Alert;
 use kartik\icons\Icon;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
+use yii\bootstrap5\Modal;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 
@@ -72,7 +73,17 @@ $isGuest = Yii::$app->user->isGuest;
                 <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
             <?php endif ?>
             <?= Alert::widget() ?>
-            <?= $content ?>
+            <?php
+            Modal::begin([
+                'id' => 'modal',
+                'size' => 'modal-md',
+                'title' => '',
+            ]);
+            echo "<div id='modalContent'></div>";
+            Modal::end();
+
+            echo $content;
+            ?>
         </div>
     </main>
 

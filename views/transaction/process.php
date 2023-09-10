@@ -14,8 +14,6 @@ use yii\jui\DatePicker;
 $js = JSRegister::begin();
 ?>
 <script>
-    $('#transaction-amount-disp').attr('type', 'number');
-
     $('#trx-form').on('submit', function(e) {
         return false;
     });
@@ -24,9 +22,7 @@ $js = JSRegister::begin();
         e.preventDefault();
 
         $.post($('#trx-form').attr('action'), $('#trx-form').serialize(), function(data, status) {
-
             if (data) {
-                console.log(data, status);
                 $.pjax.reload('#kv-pjax-container', {
                     timeout: 3000
                 });
@@ -53,9 +49,16 @@ $js = JSRegister::begin();
 
     <?= $form->field($model, 'is_income')->radioList(['Pengeluaran', 'Pemasukan']) ?>
 
+    <?= $form->field($model, 'category')->widget(TypeaheadBasic::classname(), [
+        'data' => $category,
+        'options' => ['placeholder' => 'Kategori'],
+        'pluginOptions' => ['highlight' => true, 'minLength' => 0, 'allowClear' => true]
+    ])
+    ?>
+
     <?= $form->field($model, 'amount')->widget(NumberControl::classname(), [
+        'displayOptions' => ['type' => 'tel'],
         'maskedInputOptions' => [
-            'alias' => 'numeric',
             'groupSeparator' => '.',
             'radixPoint' => ',',
             'allowMinus' => false,
@@ -63,13 +66,6 @@ $js = JSRegister::begin();
             'rightAlign' => false,
         ],
     ]); ?>
-
-    <?= $form->field($model, 'category')->widget(TypeaheadBasic::classname(), [
-        'data' => $category,
-        'options' => ['placeholder' => 'Kategori'],
-        'pluginOptions' => ['highlight' => true, 'minLength' => 0, 'allowClear' => true]
-    ])
-    ?>
 
     <?= $form->field($model, 'note')->textarea() ?>
 
