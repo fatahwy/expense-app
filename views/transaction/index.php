@@ -10,6 +10,7 @@ use yii\helpers\Url;
 use yii\web\View;
 use richardfan\widget\JSRegister;
 use kartik\icons\Icon;
+use yii\jui\DatePicker;
 
 /* @var $this View */
 /* @var $dataProvider ActiveDataProvider */
@@ -94,6 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         echo GridView::widget([
             'dataProvider' => $dataProvider,
+            'filterModel' => $model,
             'beforeHeader' => $beforeHeader,
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
@@ -101,6 +103,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute' => 'date_trx',
                     'format' => 'date',
+                    'filter' => DatePicker::widget([
+                        'model' => $model, 
+                        'options' => ['class' => 'form-control'],
+                        'attribute' => 'date_trx',
+                        'dateFormat' => 'yyyy-MM-dd',
+                    ])
                 ],
                 [
                     'attribute' => 'label_id',
@@ -121,7 +129,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         $btn .= '&nbsp';
                         $btn .= Html::button(Icon::show('trash', ['class' => 'fa-sm']), ['class' => 'btn btn-danger btm-sm', 'data-method' => 'post', 'data-confirm' => 'Anda yakin mau menghapus?', 'value' => Url::to(['delete', 'transaction_id' => $model->transaction_id])]);
                         return $btn;
-                    }
+                    },
+                    'width' => '20%',
                 ]
             ],
             'toolbar' => []

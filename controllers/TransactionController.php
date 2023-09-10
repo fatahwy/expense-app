@@ -34,14 +34,19 @@ class TransactionController extends BaseController
             $user->bank_active = $bank->bank_id ?? null;
             $user->save();
         }
-        $bankTotal = $user->defaultAccount->total;
+
+        $bankTotal = $user->defaultAccount->total ?? 0;
+
+        $model = new Transaction();
+        $model->load($this->request->get());
+
         $query = Transaction::find()
+            ->innerJoinWith(['label'])
             ->where(['transaction.bank_id' => $user->bank_active]);
 
         $mainQuery = clone $query;
 
         $modelTotal = $query->select(['transaction.label_id', new Expression('sum(amount) amount')])
-            ->innerJoinWith(['label'])
             ->groupBy(['transaction.label_id'])
             ->all();
 
@@ -53,6 +58,10 @@ class TransactionController extends BaseController
         if ($user->bank_active) {
             $dataProvider = new ActiveDataProvider([
                 'query' => $mainQuery
+                    ->andFilterWhere(['date_trx' => $model->date_trx])
+                    ->andFilterWhere(['label.name' => $model->label_id])
+                    ->andFilterWhere(['amount' => $model->amount])
+                    ->andFilterWhere(['note' => $model->note])
                     ->orderBy(['date_trx' => SORT_DESC, 'transaction_id' => SORT_DESC]),
                 'pagination' => [
                     'pageSize' => 20
@@ -65,6 +74,7 @@ class TransactionController extends BaseController
             'total' => $total,
             'bankTotal' => $bankTotal,
             'user' => $user,
+            'model' => $model,
             'dataProvider' => $dataProvider,
         ]);
     }

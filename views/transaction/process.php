@@ -5,6 +5,7 @@ use richardfan\widget\JSRegister;
 use yii\widgets\ActiveForm;
 use yii\bootstrap5\Html;
 use kartik\number\NumberControl;
+use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var app\models\Transaction $model */
@@ -13,6 +14,8 @@ use kartik\number\NumberControl;
 $js = JSRegister::begin();
 ?>
 <script>
+    $('#transaction-amount-disp').attr('type', 'number');
+
     $('#trx-form').on('submit', function(e) {
         return false;
     });
@@ -43,12 +46,16 @@ $js = JSRegister::begin();
 
     <?php $form = ActiveForm::begin(['id' => 'trx-form']); ?>
 
-    <?= $form->field($model, 'date_trx')->textInput(['type' => 'date']) ?>
+    <?= $form->field($model, 'date_trx')->widget(DatePicker::classname(), [
+        'options' => ['class' => 'form-control'],
+        'dateFormat' => 'yyyy-MM-dd',
+    ]); ?>
 
     <?= $form->field($model, 'is_income')->radioList(['Pengeluaran', 'Pemasukan']) ?>
 
     <?= $form->field($model, 'amount')->widget(NumberControl::classname(), [
         'maskedInputOptions' => [
+            'alias' => 'numeric',
             'groupSeparator' => '.',
             'radixPoint' => ',',
             'allowMinus' => false,

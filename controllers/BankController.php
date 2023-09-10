@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Account;
 use app\models\Bank;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -13,7 +14,7 @@ class BankController extends BaseController
     {
         $user = $this->user;
         $query = Bank::find()
-            ->where(['client_id' => $user->client_id]);
+            ->andWhere(['client_id' => $user->client_id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -70,7 +71,9 @@ class BankController extends BaseController
 
     public function actionDelete($bank_id)
     {
-        $this->findModel($bank_id)->delete();
+        $model = $this->findModel($bank_id);
+        Account::updateAll(['bank_active' => null], ['bank_active' => $model->bank_id]);
+        $model->delete();
 
         return $this->redirect(['index']);
     }
