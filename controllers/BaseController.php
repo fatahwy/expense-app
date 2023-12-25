@@ -74,12 +74,7 @@ class BaseController extends Controller
             $this->locale = $user->client->locale;
         }
 
-        if (parent::beforeAction($action)) {
-            $this->doLog($action);
-            return true;
-        }
-
-        return false;
+        return parent::beforeAction($action);
     }
 
     public function test($object = [])
