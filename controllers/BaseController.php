@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\Helper;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -11,6 +12,7 @@ class BaseController extends Controller
 {
 
     public $user;
+    public $locale;
 
     public function behaviors()
     {
@@ -31,7 +33,12 @@ class BaseController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                    ]
+                    ],
+                    [
+                        'controllers' => ['member', 'setting'],
+                        'allow' => true,
+                        'roles' => [Helper::ROLE_ADMIN],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -62,10 +69,13 @@ class BaseController extends Controller
     public function beforeAction($action)
     {
         $user = Yii::$app->user->identity;
-        $this->user = $user;
+        if ($user) {
+            $this->user = $user;
+            $this->locale = $user->client->locale;
+        }
 
         if (parent::beforeAction($action)) {
-            // $this->doLog($action);
+            $this->doLog($action);
             return true;
         }
 
