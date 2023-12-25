@@ -2,25 +2,7 @@
 
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
-use \kartik\icons\Icon;
-
-$pdfHeader = [
-    'L' => [
-        'content' => 'asdasdasd',
-    ],
-    'C' => [
-        'content' => 'CENTER CONTENT (HEAD)',
-        //        'content' => '',
-        'font-size' => 10,
-        'font-style' => 'B',
-        'font-family' => 'arial',
-        'color' => '#333333',
-    ],
-    'R' => [
-        'content' => 'xxxxxxxxxxxxxxxxxxxxxxxxx',
-    ],
-    //    'line' => true,
-];
+use kartik\icons\Icon;
 
 $pdfFooter = [
     'L' => [
@@ -29,21 +11,14 @@ $pdfFooter = [
     'C' => [
         'content' => '',
     ],
-    //    'R' => [
-    //        'content' => 'RIGHT CONTENT (FOOTER)',
-    //        'font-size' => 10,
-    //        'color' => '#333333',
-    //        'font-family' => 'arial',
-    //    ],
-    //    'line' => true,
 ];
 
 return [
     'bsVersion' => '5.x',
-    'adminEmail' => 'fatahwidiyanto11@gmail.com',
+    'adminEmail' => 'noreply@fathproject.site',
     'senderEmail' => 'noreply@fathproject.site',
     'senderName' => 'Example.com mailer',
-    //    'bsDependencyEnabled' => false
+    // 'bsDependencyEnabled' => false,
     'icon-framework' => Icon::FA,  // Font Awesome Icon framework,
     'kartikConfig' => [
         'fileInput' => [
@@ -64,23 +39,6 @@ return [
             'target' => GridView::TARGET_BLANK
         ],
         'exportConfig' => [
-            GridView::PDF => [
-                'filename' => "download",
-                'config' => [
-                    'mode' => 'c',
-                    'format' => 'A4',
-                    'orientation' => 'P',
-                    'cssInline' => '.kv-grid-table {font-size:12px;}'
-                        . '.table-sm td, .table-sm th {padding: 0px;}'
-                        . '.kv-page-summary{background-color: white;}',
-                    'methods' => [
-                        'SetHeader' => null,
-                        'SetFooter' => [
-                            ['odd' => $pdfFooter, 'even' => $pdfFooter]
-                        ],
-                    ],
-                ]
-            ],
             GridView::EXCEL => [
                 'filename' => "download",
             ]
@@ -114,13 +72,11 @@ return [
                 {export}
             </div>
         ',
-        //        {toggleData}
         'panelTemplate' => '
             {panelHeading}
             {items}
             {panelFooter}
         ',
-        // {panelBefore}
         'toolbar' => [
             '{export}',
             '{toggleData}',
@@ -128,7 +84,7 @@ return [
     ],
     'exportConfig' => [
         'filename' => 'download',
-        //        'target' => ExportMenu::TARGET_BLANK,
+        // 'target' => ExportMenu::TARGET_BLANK,
         'pjaxContainerId' => 'kv-pjax-container',
         'showColumnSelector' => false,
         'showConfirmAlert' => false,
@@ -138,6 +94,7 @@ return [
             ExportMenu::FORMAT_TEXT => false,
             ExportMenu::FORMAT_HTML => false,
             ExportMenu::FORMAT_EXCEL => false,
+            ExportMenu::FORMAT_PDF => false,
         ],
     ]
 ];

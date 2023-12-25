@@ -1,11 +1,12 @@
 <?php
 
+use app\components\Helper;
+use yii\bootstrap5\ActiveForm;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Bank $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var ActiveForm $form */
 ?>
 
 <div class="bank-form">
@@ -17,7 +18,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'show_label')->checkbox() ?>
 
     <div class="form-group text-end">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($model->isNewRecord ? Helper::faSave() : Helper::faUpdate(), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

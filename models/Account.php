@@ -12,6 +12,7 @@ use Yii;
  * @property string $password
  * @property int|null $bank_active
  * @property int $client_id
+ * @property int $role
  * @property string|null $created_at
  * @property string|null $updated_at
  *
@@ -20,6 +21,7 @@ use Yii;
  */
 class Account extends \yii\db\ActiveRecord
 {
+    public $email;
     /**
      * {@inheritdoc}
      */
@@ -34,9 +36,12 @@ class Account extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password', 'client_id'], 'required'],
+            [['username',  'role'], 'required'],
+            [['password', 'client_id'], 'required', 'on' => 'create'],
+            [['username', 'password', 'email'], 'required', 'on' => 'register'],
+            [['email'], 'email'],
             [['password'], 'string'],
-            [['bank_active', 'client_id'], 'integer'],
+            [['bank_active', 'client_id', 'role'], 'integer'],
             [['username'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Client::class, 'targetAttribute' => ['client_id' => 'client_id']],

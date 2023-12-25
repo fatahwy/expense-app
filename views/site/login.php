@@ -5,12 +5,30 @@
 
 /** @var app\models\LoginForm $model */
 
+use richardfan\widget\JSRegister;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
+
+JSRegister::begin()
 ?>
+<script>
+    $('#toggle-password').click(function(e) {
+        const isShow = $('#toggle-password').find('.fa-eye-slash').length;
+
+        if (isShow) {
+            $('#toggle-password').find('.fa-eye-slash').addClass('fa-eye').removeClass('fa-eye-slash');
+        } else {
+            $('#toggle-password').find('.fa-eye').addClass('fa-eye-slash').removeClass('fa-eye');
+        }
+
+        $('#input-password').attr('type', isShow ? 'text' : 'password');
+    })
+</script>
+<?php JSRegister::end() ?>
+
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -31,17 +49,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'password', [
+                'options' => ['class' => 'form-group has-feedback'],
+                'inputTemplate' => '{input}<div class="input-group-text cursor-pointer" id="toggle-password"><i class="fas fa-eye-slash"></i></div>',
+                'template' => '{label}{beginWrapper}{input}{error}{endWrapper}',
+                'wrapperOptions' => ['class' => 'input-group mb-3']
+            ])
+                ->passwordInput(['id' => 'input-password'])->label('Password') ?>
 
-            <?php $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            ]) ?>
-
-            <div class="form-group text-end">
-                <div>
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+            <div class="form-group">
+                <?= Html::submitButton('Login', ['class' => 'btn btn-primary block']) ?>
             </div>
+
+            Don't have an account? <a href="/site/register">Sign up</a>
 
             <?php ActiveForm::end(); ?>
 

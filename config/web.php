@@ -3,14 +3,17 @@
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 use kartik\mpdf\Pdf;
+use yii\bootstrap5\LinkPager as LinkPager5;
+use yii\widgets\LinkPager;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$env = require __DIR__ . '/env.php';
 
 $config = [
     'id' => 'basic',
     'name' => 'Expense App',
-    'language' => 'id',
+    'language' => 'en',
     'timezone' => 'Asia/Jakarta',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -46,10 +49,30 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,
-            'viewPath' => '@app/mail',
-            // send all mails to a file by default.
-            'useFileTransport' => true,
+            'class' => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure transport
+            // for the mailer to send real emails.
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => $env['mail_host'],
+                'username' => $env['mail_username'],
+                'password' => $env['mail_password'],
+                'port' => '465',
+                'encryption' => 'ssl',
+                'streamOptions' => [
+                    'ssl' => [
+                        'allow_self_signed' => true,
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+                ],
+            ],
+        ],
+        'queue' => [
+            'class' => 'yii\queue\file\Queue',
+            'path' => '@runtime/queue',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -64,8 +87,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            'rules' => [],
         ],
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
@@ -73,10 +95,6 @@ $config = [
             'defaultTimeZone' => 'Asia/Jakarta',
             'dateFormat' => 'php:d M Y',
             'datetimeFormat' => 'php:d F Y H:i',
-            'decimalSeparator' => ',',
-            'thousandSeparator' => '.',
-            'currencyCode' => 'Rp.',
-            'locale' => 'id-ID',
             'numberFormatterOptions' => [
                 NumberFormatter::MIN_FRACTION_DIGITS => 2,
                 NumberFormatter::MAX_FRACTION_DIGITS => 2,
@@ -104,7 +122,7 @@ $config = [
         'definitions' => [
             GridView::class => $params['gridConfig'],
             ExportMenu::class => $params['exportConfig'],
-            LinkPager::class => LinkPager4::class,
+            LinkPager::class => LinkPager5::class,
         ],
     ],
 ];

@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\DBHelper;
+use app\components\Helper;
 use app\models\Bank;
 use app\models\Label;
 use app\models\Transaction;
@@ -98,7 +98,7 @@ class TransactionController extends BaseController
             $model->amount = abs($model->amount);
         } else {
             $model = new Transaction();
-            $model->date_trx = DBHelper::today();
+            $model->date_trx = Helper::today();
             $model->is_income = 0; // pengeluaran
         }
         $labels = Label::find()

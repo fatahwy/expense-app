@@ -2,58 +2,26 @@
 
 namespace app\controllers;
 
-use app\models\Bank;
+use app\components\Helper;
+use app\models\Account;
+use app\models\Client;
 use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
 use app\models\LoginForm;
-use app\models\ContactForm;
-use app\models\Transaction;
-use yii\data\ActiveDataProvider;
+use yii\bootstrap5\Html;
+use yii\web\Controller;
 
-class SiteController extends BaseController
+class SiteController extends Controller
 {
 
-    public function actionIndex()
+    public function actions()
     {
-        $user = $this->user;
-        $dataProvider = null;
-
-        if(empty($user->default_account)) {
-            $bank = Bank::findOne(['client_id' => $user->client_id]);
-            $user->default_account = $bank->bank_id ?? null;
-        }
-
-        if ($user->default_account) {
-            $query = Transaction::find()
-                ->where(['bank_id' => $user->default_account])
-                ->cache();
-
-            $dataProvider = new ActiveDataProvider([
-                'query' => $query,
-                //            'pagination' => [
-                //                'pageSize' => 1
-                //            ],
-                //            'sort' => [
-                //                'defaultOrder' => [
-                //                    'id_branch' => SORT_DESC,
-                //                ]
-                //            ],
-            ]);
-        }
-
-        return $this->render('index', [
-            'user' => $user,
-            'dataProvider' => $dataProvider,
-        ]);
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
     }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -71,11 +39,65 @@ class SiteController extends BaseController
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
+    public function actionRegister()
+    {
+        $model = new Account();
+        $model->scenario = 'register';
+
+        if ($model->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $client = new Client();
+                $client->name = $model->username;
+                $client->email = $model->email;
+                $client->save();
+
+                $model->password = md5(trim($model->password));
+                $model->role = Helper::ROLE_ADMIN;
+                $model->client_id = $client->client_id;
+
+                if ($model->save()) {
+                    $this->sendConfirmationEmail($model->email);
+                    $transaction->commit();
+                    Helper::flashSucceed('Registration successful, please check your email!.');
+                    return $this->refresh();
+                }
+                $model->password = null;
+                Helper::flashFailed(Html::errorSummary([$model, $client]));
+            } catch (\Throwable $th) {
+                Helper::flashFailed('Something error.' . $th->getMessage());
+            }
+        }
+
+        return $this->render('register', ['model' => $model]);
+    }
+
+    public function actionConfirm($email)
+    {
+        $user = Account::find()
+            ->innerJoinWith(['client'])
+            ->where(['email' => $email])
+            ->one();
+
+        if (!$user) {
+            Helper::flashFailed('User not found.');
+            return $this->redirect(['login']);
+        }
+        $client =$user->client;
+
+        if ($client->verified_at) {
+            Helper::flashFailed('User has verified. Please login');
+            return $this->redirect(['login']);
+        }
+
+        $client->verified_at = Helper::now();
+        $client->save();
+
+        Helper::flashSucceed('User confirmed successfully!');
+        return $this->redirect(['site/login']);
+    }
+
+
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -83,31 +105,16 @@ class SiteController extends BaseController
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
+    protected function sendConfirmationEmail($email)
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+        $params = Yii::$app->params;
+        $confirmationLink = Yii::$app->urlManager->createAbsoluteUrl(['site/confirm', 'email' => $email]);
+        $message = Yii::$app->mailer->compose()
+            ->setFrom($params['senderEmail'])
+            ->setTo($email)
+            ->setSubject('Confirmation Email')
+            ->setHtmlBody("Click the following link to confirm your account: <a href='$confirmationLink'>confirm</a>");
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
+        return $message->send();
     }
 }

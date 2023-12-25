@@ -9,30 +9,18 @@ class User extends Account implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
 
-    // private static $users = [
-    //     '100' => [
-    //         'id' => '100',
-    //         'username' => 'admin',
-    //         'password' => 'admin',
-    //         'authKey' => 'test100key',
-    //         'accessToken' => '100-token',
-    //     ],
-    //     '101' => [
-    //         'id' => '101',
-    //         'username' => 'demo',
-    //         'password' => 'demo',
-    //         'authKey' => 'test101key',
-    //         'accessToken' => '101-token',
-    //     ],
-    // ];
-
-
     /**
      * {@inheritdoc}
      */
     public static function findIdentity($id)
     {
-        return self::findOne($id);
+        $model = self::find()
+            ->innerJoinWith(['client'])
+            ->where(['user_id' => $id])
+            ->andWhere(['not', ['verified_at' => null]])
+            ->one();
+
+        return $model;
     }
 
     /**
@@ -52,7 +40,9 @@ class User extends Account implements \yii\web\IdentityInterface
     public static function findByUsername($username)
     {
         $model = self::find()
+            ->innerJoinWith(['client'])
             ->where(['username' => $username])
+            ->andWhere(['not', ['verified_at' => null]])
             ->one();
 
         return $model;

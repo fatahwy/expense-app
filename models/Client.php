@@ -31,9 +31,10 @@ class Client extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['name', 'email'], 'required'],
+            [['locale', 'verified_at'], 'string'],
             [['name'], 'string', 'max' => 255],
+            ['email', 'email'],
         ];
     }
 
@@ -45,6 +46,7 @@ class Client extends \yii\db\ActiveRecord
         return [
             'client_id' => 'Client ID',
             'name' => 'Name',
+            'locale' => 'Currency',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

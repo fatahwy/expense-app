@@ -2,14 +2,14 @@
 
 use kartik\typeahead\TypeaheadBasic;
 use richardfan\widget\JSRegister;
-use yii\widgets\ActiveForm;
 use yii\bootstrap5\Html;
 use kartik\number\NumberControl;
+use yii\bootstrap5\ActiveForm;
 use yii\jui\DatePicker;
 
 /** @var yii\web\View $this */
 /** @var app\models\Transaction $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var ActiveForm $form */
 
 $js = JSRegister::begin();
 ?>
@@ -47,11 +47,11 @@ $js = JSRegister::begin();
         'dateFormat' => 'yyyy-MM-dd',
     ]); ?>
 
-    <?= $form->field($model, 'is_income')->radioList(['Pengeluaran', 'Pemasukan']) ?>
+    <?= $form->field($model, 'is_income')->radioList(['Expense', 'Income']) ?>
 
     <?= $form->field($model, 'category')->widget(TypeaheadBasic::classname(), [
         'data' => $category,
-        'options' => ['placeholder' => 'Kategori'],
+        'options' => ['placeholder' => 'Category'],
         'pluginOptions' => ['highlight' => true, 'minLength' => 0, 'allowClear' => true]
     ])
     ?>
@@ -59,8 +59,8 @@ $js = JSRegister::begin();
     <?= $form->field($model, 'amount')->widget(NumberControl::classname(), [
         'displayOptions' => ['type' => 'tel'],
         'maskedInputOptions' => [
-            'groupSeparator' => '.',
-            'radixPoint' => ',',
+            'groupSeparator' => $this->context->locale == 'id-ID' ? '.' : ',',
+            'radixPoint' => $this->context->locale == 'id-ID' ? ',' : '.',
             'allowMinus' => false,
             'digits' => 0,
             'rightAlign' => false,

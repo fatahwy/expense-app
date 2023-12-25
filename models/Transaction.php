@@ -57,7 +57,7 @@ class Transaction extends \yii\db\ActiveRecord
             'is_income' => 'Type',
             'bank_id' => 'Bank ID',
             'amount' => 'Amount',
-            'label_id' => 'Label',
+            'label_id' => 'Category',
             'note' => 'Note',
             'date_trx' => 'Date Input',
             'created_at' => 'Created At',

@@ -57,7 +57,7 @@ class Bank extends BaseModel
             'client_id' => 'Client ID',
             'name' => 'Name',
             'total' => 'Total',
-            'show_label' => 'Show Label Transaction',
+            'show_label' => 'Show Summary Category Transaction',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'delete_time' => 'Delete Time',

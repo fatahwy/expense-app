@@ -3,11 +3,11 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var app\models\Bank $model */
+/** @var app\models\Member $model */
 
-$this->title = 'Update Bank Account: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Bank Account', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name];
+$this->title = 'Update Member: ' . $model->username;
+$this->params['breadcrumbs'][] = ['label' => 'Member', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->username];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="bank-update">

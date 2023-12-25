@@ -4,6 +4,7 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use app\components\Helper;
 use app\widgets\Alert;
 use kartik\icons\Icon;
 use yii\bootstrap5\Breadcrumbs;
@@ -35,7 +36,7 @@ $this->registerMetaTag(['name' => 'apple-mobile-web-app-status-bar-style', 'cont
 $this->registerLinkTag(['rel' => 'apple-touch-icon', 'href' => $linkIcon]);
 
 Icon::map($this);
-$isGuest = Yii::$app->user->isGuest;
+$isGuest = Helper::isGuest();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -57,23 +58,26 @@ $isGuest = Yii::$app->user->isGuest;
             'options' => ['class' => 'navbar-expand-md navbar-dark bg-success fixed-top']
         ]);
         if (!$isGuest) {
+            $urlLinks = [
+                ['label' => 'Transaction', 'url' => ['/transaction/index']],
+                ['label' => 'Report', 'url' => ['/report/index']],
+                ['label' => 'Bank Account', 'url' => ['/bank/index']],
+            ];
+
+            if (Helper::isAdmin()) {
+                $urlLinks[] = ['label' => 'Member', 'url' => ['/member/index']];
+                $urlLinks[] = ['label' => 'Setting', 'url' => ['/setting/index']];
+            }
+            $urlLinks[] =
+                '<li class="nav-item">'
+                . Html::beginForm(['/site/logout'])
+                . Html::submitButton('Logout (' . Yii::$app->user->identity->username . ')', ['class' => 'nav-link btn btn-link logout'])
+                . Html::endForm()
+                . '</li>';
+
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav'],
-                'items' => [
-                    ['label' => 'Account', 'url' => ['/bank/index']],
-                    // ['label' => 'About', 'url' => ['/site/about']],
-                    // ['label' => 'Contact', 'url' => ['/site/contact']],
-                    $isGuest
-                        ? ['label' => 'Login', 'url' => ['/site/login']]
-                        : '<li class="nav-item">'
-                        . Html::beginForm(['/site/logout'])
-                        . Html::submitButton(
-                            'Logout (' . Yii::$app->user->identity->username . ')',
-                            ['class' => 'nav-link btn btn-link logout']
-                        )
-                        . Html::endForm()
-                        . '</li>'
-                ]
+                'items' => $urlLinks
             ]);
         }
         NavBar::end();
