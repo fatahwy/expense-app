@@ -148,6 +148,11 @@ class Helper
         return $color;
     }
 
+    public static function faReset($text = 'Reset')
+    {
+        return "<i class='fa'>&#xf021;</i> $text";
+    }
+
     public static function faSearch($text = 'Search')
     {
         return "<i class='fa fa-search'></i> $text";

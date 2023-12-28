@@ -1,5 +1,6 @@
 <?php
 
+use app\components\Helper;
 use kartik\typeahead\TypeaheadBasic;
 use richardfan\widget\JSRegister;
 use yii\bootstrap5\Html;
@@ -70,8 +71,8 @@ $js = JSRegister::begin();
     <?= $form->field($model, 'note')->textarea() ?>
 
     <div class="form-group text-end">
-        <?= Html::button('Reset', ['class' => 'btn btn-secondary btn-reset']) ?>
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::button(Helper::faReset(), ['class' => 'btn btn-secondary btn-reset']) ?>
+        <?= Html::submitButton(Helper::faSave(), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

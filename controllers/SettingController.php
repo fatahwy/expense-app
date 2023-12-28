@@ -15,7 +15,6 @@ class SettingController extends BaseController
         $modelInput = new Client();
 
         if ($modelInput->load($this->request->post())) {
-            $model->email = $modelInput->email;
             $model->locale = $modelInput->locale;
 
             if ($model->save()) {

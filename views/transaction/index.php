@@ -37,7 +37,7 @@ if (is_null($dataProvider)) {
     echo "</div>";
     echo "</div>";
 
-    echo Html::button(Helper::faAdd('Transaction'), ['class' => 'btn mb-3 btn-success btn-sm modalButton', 'modal-title' => 'Create', 'value' => Url::to(['process'])]);
+    echo Html::button(Helper::faAdd('Transaction'), ['class' => 'btn mb-3 btn-success modalButton', 'modal-title' => 'Add', 'value' => Url::to(['process'])]);
 
     $labelOption = [
         'class' => 'text-left',
@@ -53,7 +53,7 @@ if (is_null($dataProvider)) {
         [
             'columns' => [
                 [
-                    'content' => 'Saldo',
+                    'content' => 'Balance',
                     'options' => $labelOption,
                 ],
                 [

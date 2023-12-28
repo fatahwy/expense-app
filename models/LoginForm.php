@@ -47,11 +47,11 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
 
-            if (empty($user->client->verified_at)) {
+            if (empty($user->client)) {
+                $this->addError($attribute, 'Account has not resgistered.');
+            } else if (empty($user->client->verified_at)) {
                 $this->addError($attribute, 'Account has not verified.');
-            }
-
-            if (!$user || !$user->validatePassword($this->password)) {
+            } elseif ($user && !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }

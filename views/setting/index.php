@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-md-6">
-            <?= $form->field($model, 'email')->textInput(['type' => 'email']) ?>
+            <?= $form->field($model, 'email')->textInput(['disabled' => true]) ?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'locale')->dropDownList(['id-ID' => 'IDR', 'en-US' => 'USD']) ?>

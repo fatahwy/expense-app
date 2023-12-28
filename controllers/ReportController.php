@@ -60,7 +60,7 @@ class ReportController extends BaseController
                 }
 
                 foreach ($models as $m) {
-                    $summary['data'][$m['is_income'] ? 0 : 1][$m['month']] = $m['amount'];
+                    $summary['data'][$m['is_income'] ? 0 : 1][$m['month'] - 1] = $m['amount'];
                 }
 
                 $data['summary'] = $summary;
