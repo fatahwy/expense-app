@@ -8,11 +8,10 @@ use yii\widgets\LinkPager;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
-$env = require __DIR__ . '/env.php';
 
 $config = [
     'id' => 'basic',
-    'name' => 'Expense App',
+    'name' => $_ENV['APP_NAME'],
     'language' => 'en',
     'timezone' => 'Asia/Jakarta',
     'basePath' => dirname(__DIR__),
@@ -56,9 +55,9 @@ $config = [
             'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => $env['mail_host'],
-                'username' => $env['mail_username'],
-                'password' => $env['mail_password'],
+                'host' => $_ENV['mail_host'],
+                'username' => $_ENV['mail_username'],
+                'password' => $_ENV['mail_password'],
                 'port' => '465',
                 'encryption' => 'ssl',
                 'streamOptions' => [

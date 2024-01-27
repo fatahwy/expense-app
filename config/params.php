@@ -15,8 +15,8 @@ $pdfFooter = [
 
 return [
     'bsVersion' => '5.x',
-    'adminEmail' => 'noreply@fathproject.site',
-    'senderEmail' => 'noreply@fathproject.site',
+    'adminEmail' => $_ENV['ADMIN_EMAIL'],
+    'senderEmail' => $_ENV['SENDER_EMAIL'],
     'senderName' => 'Example.com mailer',
     // 'bsDependencyEnabled' => false,
     'icon-framework' => Icon::FA,  // Font Awesome Icon framework,
