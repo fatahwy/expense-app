@@ -53,7 +53,6 @@ return [
         'responsiveWrap' => false,
         'panel' => [
             'type' => GridView::TYPE_SUCCESS,
-            'footer' => false,
         ],
         'perfectScrollbar' => true,
         'headerRowOptions' => [
